@@ -576,9 +576,13 @@ ReadbackRetry:
     // Ensure the viewport is set to the desired video region
     SDL_RenderSetViewport(m_Renderer, &dst);
 
-    // Use nearest pixel sampling if the video region size is a multiple of the frame size
+    const bool preferSharpScaling = StreamingPreferences::get()->preferSharpScaling;
+
+    // Use nearest pixel sampling if the user prefers sharp scaling and the video region size
+    // is a multiple of the frame size. Otherwise, use linear sampling to avoid blockiness.
     SDL_SetTextureScaleMode(m_Texture,
-                            dst.w % frame->width == 0 && dst.h % frame->height == 0 ?
+                            preferSharpScaling &&
+                                    dst.w % frame->width == 0 && dst.h % frame->height == 0 ?
                                 SDL_ScaleModeNearest : SDL_ScaleModeLinear);
 
     // Draw the video content itself

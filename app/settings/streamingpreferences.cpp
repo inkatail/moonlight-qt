@@ -27,6 +27,7 @@
 #define SER_HDR "hdr"
 #define SER_YUV444 "yuv444"
 #define SER_VIDEODEC "videodec"
+#define SER_PREFERSHARPSCALING "prefersharpscaling"
 #define SER_WINDOWMODE "windowmode"
 #define SER_MDNS "mdns"
 #define SER_QUITAPPAFTER "quitAppAfter"
@@ -159,6 +160,7 @@ void StreamingPreferences::reload()
                                                   static_cast<int>(VideoCodecConfig::VCC_AUTO)).toInt());
     videoDecoderSelection = static_cast<VideoDecoderSelection>(settings.value(SER_VIDEODEC,
                                                   static_cast<int>(VideoDecoderSelection::VDS_AUTO)).toInt());
+    preferSharpScaling = settings.value(SER_PREFERSHARPSCALING, true).toBool();
     windowMode = static_cast<WindowMode>(settings.value(SER_WINDOWMODE,
                                                         // Try to load from the old preference value too
                                                         static_cast<int>(settings.value(SER_FULLSCREEN, true).toBool() ?
@@ -347,6 +349,7 @@ void StreamingPreferences::save()
     settings.setValue(SER_YUV444, enableYUV444);
     settings.setValue(SER_VIDEOCFG, static_cast<int>(videoCodecConfig));
     settings.setValue(SER_VIDEODEC, static_cast<int>(videoDecoderSelection));
+    settings.setValue(SER_PREFERSHARPSCALING, preferSharpScaling);
     settings.setValue(SER_WINDOWMODE, static_cast<int>(windowMode));
     settings.setValue(SER_UIDISPLAYMODE, static_cast<int>(uiDisplayMode));
     settings.setValue(SER_LANGUAGE, static_cast<int>(language));

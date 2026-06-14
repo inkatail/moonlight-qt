@@ -797,13 +797,15 @@ void EGLRenderer::renderFrame(AVFrame* frame)
     ssize_t plane_count = m_Backend->exportEGLImages(frame, m_EGLDisplay, imgs);
     if (plane_count < 0)
         return;
+    const bool preferSharpScaling = StreamingPreferences::get()->preferSharpScaling;
     for (ssize_t i = 0; i < plane_count; ++i) {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_EXTERNAL_OES, m_Textures[i]);
         m_glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, imgs[i]);
 
-        // Use GL_NEAREST to reduce sampling if the video region is a multiple of the frame size
-        if (dst.w % frame->width == 0 && dst.h % frame->height == 0) {
+        // Use GL_NEAREST if the user prefers sharp scaling and the video region is a multiple
+        // of the frame size. Otherwise, use linear sampling to avoid blockiness.
+        if (preferSharpScaling && dst.w % frame->width == 0 && dst.h % frame->height == 0) {
             glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         }

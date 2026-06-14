@@ -728,6 +728,49 @@ Flickable {
 
                 Label {
                     width: parent.width
+                    id: scalingTitle
+                    text: qsTr("Video scaling:")
+                    font.pointSize: 12
+                    wrapMode: Text.Wrap
+                }
+
+                Label {
+                    width: parent.width
+                    id: scalingDesc
+                    text: qsTr("Choose sharp integer scaling for crisp edges, or smooth scaling to reduce blockiness in thumbnails and other UI-heavy content.")
+                    font.pointSize: 9
+                    wrapMode: Text.Wrap
+                }
+
+                AutoResizingComboBox {
+                    id: scalingComboBox
+                    maximumWidth: parent.width / 2
+                    textRole: "text"
+
+                    model: ListModel {
+                        ListElement {
+                            text: qsTr("Smooth (recommended)")
+                            val: false
+                        }
+
+                        ListElement {
+                            text: qsTr("Sharp (pixel-perfect)")
+                            val: true
+                        }
+                    }
+
+                    Component.onCompleted: {
+                        currentIndex = StreamingPreferences.preferSharpScaling ? 1 : 0
+                        recalculateWidth()
+                    }
+
+                    onActivated: {
+                        StreamingPreferences.preferSharpScaling = model.get(currentIndex).val
+                    }
+                }
+
+                Label {
+                    width: parent.width
                     id: windowModeTitle
                     text: qsTr("Display mode")
                     font.pointSize: 12
@@ -743,7 +786,6 @@ Flickable {
                                          text: qsTr("Fullscreen"),
                                          val: StreamingPreferences.WM_FULLSCREEN
                                      })
-
                         model.append({
                                          text: qsTr("Borderless windowed"),
                                          val: StreamingPreferences.WM_FULLSCREEN_DESKTOP
