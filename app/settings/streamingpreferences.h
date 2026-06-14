@@ -183,6 +183,7 @@ public:
     bool enableHdr;
     bool enableYUV444;
     VideoDecoderSelection videoDecoderSelection;
+    bool preferSharpScaling;
     WindowMode windowMode;
     WindowMode recommendedFullScreenMode;
     UIDisplayMode uiDisplayMode;
