@@ -275,6 +275,7 @@ void SdlRenderer::renderFrame(AVFrame* frame)
 {
     int err;
     AVFrame* swFrame = nullptr;
+    const bool preferSharpScaling = StreamingPreferences::get()->preferSharpScaling;
 
     if (frame->hw_frames_ctx != nullptr && frame->format != AV_PIX_FMT_CUDA) {
 #ifdef HAVE_CUDA
@@ -575,8 +576,6 @@ ReadbackRetry:
 
     // Ensure the viewport is set to the desired video region
     SDL_RenderSetViewport(m_Renderer, &dst);
-
-    const bool preferSharpScaling = StreamingPreferences::get()->preferSharpScaling;
 
     // Use nearest pixel sampling if the user prefers sharp scaling and the video region size
     // is a multiple of the frame size. Otherwise, use linear sampling to avoid blockiness.
