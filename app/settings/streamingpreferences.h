@@ -209,6 +209,7 @@ signals:
     void enableHdrChanged();
     void enableYUV444Changed();
     void videoDecoderSelectionChanged();
+    void preferSharpScalingChanged();
     void uiDisplayModeChanged();
     void windowModeChanged();
     void framePacingChanged();
